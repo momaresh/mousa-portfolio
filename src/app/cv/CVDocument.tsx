@@ -1,8 +1,11 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { Printer, ArrowLeft, Download } from 'lucide-react'
+import { useLocale } from '@/lib/i18n/locale-provider'
+import { localize } from '@/lib/i18n/localize'
+import type { Locale } from '@/lib/i18n/dictionaries'
 import './cv.css'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -17,6 +20,38 @@ interface Props {
   atsMode?: boolean
 }
 
+function parseFeatures(raw: string | null | undefined): string[] {
+  try {
+    const parsed = JSON.parse(raw || '[]') as unknown
+    return Array.isArray(parsed) ? parsed.map(String) : []
+  } catch {
+    return []
+  }
+}
+
+function cvLabels(locale: Locale) {
+  const ar = locale === 'ar'
+  return {
+    back: ar ? 'رجوع' : 'Back',
+    download: ar ? 'تحميل PDF' : 'Download PDF',
+    print: ar ? 'طباعة' : 'Print',
+    contact: ar ? 'التواصل' : 'Contact',
+    skills: ar ? 'المهارات' : 'Skills',
+    atAGlance: ar ? 'لمحة سريعة' : 'At a Glance',
+    languages: ar ? 'اللغات' : 'Languages',
+    summary: ar ? 'الهدف الوظيفي' : 'Professional Summary',
+    experience: ar ? 'الخبرة العملية' : 'Professional Experience',
+    education: ar ? 'المؤهلات الدراسية' : 'Education',
+    services: ar ? 'الخدمات' : 'Areas of Expertise',
+    present: ar ? 'حتى الآن' : 'Present',
+    arabicNative: ar ? 'العربية (لغة أم)' : 'Arabic (Native)',
+    englishPro: ar ? 'الإنجليزية (مستوى مهني)' : 'English (Professional)',
+    generated: ar ? 'أُنشئ ديناميكياً' : 'Generated dynamically',
+    modern: ar ? 'حديث' : 'Modern',
+    ats: 'ATS',
+  }
+}
+
 export default function CVDocument({
   profile,
   skills,
@@ -26,6 +61,9 @@ export default function CVDocument({
   stats,
   atsMode = false,
 }: Props) {
+  const { locale } = useLocale()
+  const labels = cvLabels(locale)
+
   const handlePrint = useCallback(() => {
     window.print()
   }, [])
@@ -40,15 +78,18 @@ export default function CVDocument({
     window.location.href = url.toString()
   }, [atsMode])
 
-  // Group skills by category
-  const skillsByCategory = skills.reduce<Record<string, any[]>>((acc, s) => {
-    const group = acc[s.category] ?? []
-    group.push(s)
-    acc[s.category] = group
-    return acc
-  }, {})
+  const skillsByCategory = useMemo(() => {
+    return skills.reduce<Record<string, { label: string; items: any[] }>>((acc, skill) => {
+      const key = skill.category
+      const label = localize(locale, skill.category, skill.categoryAr)
+      const group = acc[key] ?? { label, items: [] }
+      group.label = label
+      group.items.push(skill)
+      acc[key] = group
+      return acc
+    }, {})
+  }, [skills, locale])
 
-  // Initials for avatar fallback
   const initials = (profile.name || 'M')
     .split(' ')
     .map((n: string) => n[0])
@@ -56,21 +97,20 @@ export default function CVDocument({
     .join('')
     .toUpperCase()
 
-  const displayName = profile.nameAr || profile.name
-  const displayTitle = profile.titleAr || profile.title
-  const displayBio = profile.bioAr || profile.bio
-  const displayLocation = profile.locationAr || profile.location
+  const displayName = localize(locale, profile.name, profile.nameAr)
+  const displayTitle = localize(locale, profile.title, profile.titleAr)
+  const displayBio = localize(locale, profile.bio, profile.bioAr)
+  const displayLocation = localize(locale, profile.location, profile.locationAr)
 
-  // Parse service features safely
   const renderServices = services.slice(0, 6).map((s) => {
-    let firstFeature = ''
-    try {
-      const arr = JSON.parse(s.features || '[]')
-      if (Array.isArray(arr) && arr.length > 0) firstFeature = arr[0]
-    } catch {
-      firstFeature = ''
+    const featuresEn = parseFeatures(s.features)
+    const featuresAr = parseFeatures(s.featuresAr)
+    const features = locale === 'ar' && featuresAr.length > 0 ? featuresAr : featuresEn
+    return {
+      id: s.id,
+      title: localize(locale, s.title, s.titleAr),
+      firstFeature: features[0] || '',
     }
-    return { ...s, firstFeature }
   })
 
   const cleanLink = (url?: string | null) => {
@@ -78,35 +118,40 @@ export default function CVDocument({
     return url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '')
   }
 
+  const dateLocale = locale === 'ar' ? 'ar-YE' : 'en-GB'
+
   return (
-    <div className={`cv-shell ${atsMode ? 'ats-mode' : ''}`}>
-      {/* Toolbar (hidden in print) */}
+    <div className={`cv-shell ${atsMode ? 'ats-mode' : ''}`} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="cv-toolbar">
         <div className="cv-toolbar-title">
-          CV — {profile.name} {atsMode && <span className="cv-mode-pill">ATS Mode</span>}
+          CV — {displayName} {atsMode && <span className="cv-mode-pill">ATS Mode</span>}
         </div>
         <div className="cv-toolbar-actions">
           <Link href="/" className="cv-btn cv-btn-ghost">
             <ArrowLeft size={16} />
-            Back
+            {labels.back}
           </Link>
-          <button onClick={toggleMode} className="cv-btn cv-btn-ghost" type="button" title={atsMode ? 'Switch to Modern (designed) layout' : 'Switch to ATS-optimized plain layout'}>
-            {atsMode ? '🎨 Modern' : '📄 ATS'}
+          <button
+            onClick={toggleMode}
+            className="cv-btn cv-btn-ghost"
+            type="button"
+            title={atsMode ? 'Modern layout' : 'ATS layout'}
+          >
+            {atsMode ? `🎨 ${labels.modern}` : `📄 ${labels.ats}`}
           </button>
           <button onClick={handlePrint} className="cv-btn cv-btn-primary" type="button">
             <Download size={16} />
-            Download PDF
+            {labels.download}
           </button>
           <button onClick={handlePrint} className="cv-btn cv-btn-ghost" type="button">
             <Printer size={16} />
-            Print
+            {labels.print}
           </button>
         </div>
       </div>
 
       <article className="cv-document" id="cv-document">
         {atsMode ? (
-          /* ============ ATS LAYOUT (plain, single-column) ============ */
           <main className="cv-main">
             <header className="cv-ats-header">
               <h1 className="cv-ats-name">{displayName}</h1>
@@ -121,19 +166,21 @@ export default function CVDocument({
 
             {displayBio && (
               <section className="cv-section">
-                <h2 className="cv-section-title">Professional Summary</h2>
+                <h2 className="cv-section-title">{labels.summary}</h2>
                 <p className="cv-summary">{displayBio}</p>
               </section>
             )}
 
             {Object.keys(skillsByCategory).length > 0 && (
               <section className="cv-section">
-                <h2 className="cv-section-title">Skills</h2>
+                <h2 className="cv-section-title">{labels.skills}</h2>
                 <div className="cv-ats-skills-block">
-                  {Object.entries(skillsByCategory).map(([cat, items]) => (
-                    <div key={cat}>
-                      <strong>{cat}:</strong>{' '}
-                      {items.map((s: any) => s.name).join(', ')}
+                  {Object.entries(skillsByCategory).map(([key, group]) => (
+                    <div key={key}>
+                      <strong>{group.label}:</strong>{' '}
+                      {group.items
+                        .map((s: any) => localize(locale, s.name, s.nameAr))
+                        .join(locale === 'ar' ? ' · ' : ', ')}
                     </div>
                   ))}
                 </div>
@@ -142,21 +189,22 @@ export default function CVDocument({
 
             {experiences.length > 0 && (
               <section className="cv-section">
-                <h2 className="cv-section-title">Professional Experience</h2>
+                <h2 className="cv-section-title">{labels.experience}</h2>
                 {experiences.map((exp) => (
                   <div className="cv-item" key={exp.id}>
                     <div className="cv-item-header">
                       <h3 className="cv-item-title">
-                        {exp.positionAr || exp.position} — {exp.companyAr || exp.company}
+                        {localize(locale, exp.position, exp.positionAr)} —{' '}
+                        {localize(locale, exp.company, exp.companyAr)}
                       </h3>
                       <span className="cv-item-date">
-                        {exp.startDate} — {exp.endDate || 'Present'}
+                        {exp.startDate} — {exp.endDate || labels.present}
                       </span>
                     </div>
-                    {exp.location && (
-                      <p className="cv-item-subtitle">{exp.location}</p>
-                    )}
-                    <p className="cv-item-body">{exp.descriptionAr || exp.description}</p>
+                    {exp.location && <p className="cv-item-subtitle">{exp.location}</p>}
+                    <p className="cv-item-body">
+                      {localize(locale, exp.description, exp.descriptionAr)}
+                    </p>
                   </div>
                 ))}
               </section>
@@ -164,18 +212,24 @@ export default function CVDocument({
 
             {educations.length > 0 && (
               <section className="cv-section">
-                <h2 className="cv-section-title">Education</h2>
+                <h2 className="cv-section-title">{labels.education}</h2>
                 {educations.map((edu) => (
                   <div className="cv-item" key={edu.id}>
                     <div className="cv-item-header">
-                      <h3 className="cv-item-title">{edu.degreeAr || edu.degree}</h3>
+                      <h3 className="cv-item-title">
+                        {localize(locale, edu.degree, edu.degreeAr)}
+                      </h3>
                       <span className="cv-item-date">
-                        {edu.startDate} — {edu.endDate || 'Present'}
+                        {edu.startDate} — {edu.endDate || labels.present}
                       </span>
                     </div>
-                    <p className="cv-item-subtitle">{edu.institutionAr || edu.institution}</p>
-                    {(edu.descriptionAr || edu.description) && (
-                      <p className="cv-item-body">{edu.descriptionAr || edu.description}</p>
+                    <p className="cv-item-subtitle">
+                      {localize(locale, edu.institution, edu.institutionAr)}
+                    </p>
+                    {localize(locale, edu.description, edu.descriptionAr) && (
+                      <p className="cv-item-body">
+                        {localize(locale, edu.description, edu.descriptionAr)}
+                      </p>
                     )}
                   </div>
                 ))}
@@ -184,7 +238,7 @@ export default function CVDocument({
 
             {renderServices.length > 0 && (
               <section className="cv-section">
-                <h2 className="cv-section-title">Areas of Expertise</h2>
+                <h2 className="cv-section-title">{labels.services}</h2>
                 {renderServices.map((s) => (
                   <div className="cv-service" key={s.id}>
                     <strong>{s.title}</strong>
@@ -195,191 +249,196 @@ export default function CVDocument({
             )}
 
             <section className="cv-section">
-              <h2 className="cv-section-title">Languages</h2>
-              <p className="cv-item-body">Arabic (Native), English (Professional working proficiency)</p>
+              <h2 className="cv-section-title">{labels.languages}</h2>
+              <p className="cv-item-body">
+                {labels.arabicNative}, {labels.englishPro}
+              </p>
             </section>
           </main>
         ) : (
           <>
-            {/* ============ MODERN SIDEBAR ============ */}
             <aside className="cv-sidebar">
-          <div className="cv-avatar">
-            {profile.avatarUrl ? (
-              <img src={profile.avatarUrl} alt={profile.name} />
-            ) : (
-              <span>{initials}</span>
-            )}
-          </div>
+              <div className="cv-avatar">
+                {profile.avatarUrl ? (
+                  <img src={profile.avatarUrl} alt={displayName} />
+                ) : (
+                  <span>{initials}</span>
+                )}
+              </div>
 
-          <h1 className="cv-name">{displayName}</h1>
-          <p className="cv-job">{displayTitle}</p>
+              <h1 className="cv-name">{displayName}</h1>
+              <p className="cv-job">{displayTitle}</p>
 
-          {/* Contact */}
-          <section className="cv-side-section">
-            <h2 className="cv-side-title">Contact</h2>
-            <ul className="cv-contact-list">
-              {profile.email && (
-                <li>
-                  <strong>✉</strong>
-                  <a href={`mailto:${profile.email}`}>{profile.email}</a>
-                </li>
-              )}
-              {profile.phone && (
-                <li>
-                  <strong>☏</strong>
-                  <a href={`tel:${profile.phone}`}>{profile.phone}</a>
-                </li>
-              )}
-              {displayLocation && (
-                <li>
-                  <strong>⌖</strong>
-                  <span>{displayLocation}</span>
-                </li>
-              )}
-              {profile.linkedin && (
-                <li>
-                  <strong>in</strong>
-                  <a href={profile.linkedin}>{cleanLink(profile.linkedin)}</a>
-                </li>
-              )}
-              {profile.website && (
-                <li>
-                  <strong>⌘</strong>
-                  <a href={profile.website}>{cleanLink(profile.website)}</a>
-                </li>
-              )}
-            </ul>
-          </section>
+              <section className="cv-side-section">
+                <h2 className="cv-side-title">{labels.contact}</h2>
+                <ul className="cv-contact-list">
+                  {profile.email && (
+                    <li>
+                      <strong>✉</strong>
+                      <a href={`mailto:${profile.email}`}>{profile.email}</a>
+                    </li>
+                  )}
+                  {profile.phone && (
+                    <li>
+                      <strong>☏</strong>
+                      <a href={`tel:${profile.phone}`}>{profile.phone}</a>
+                    </li>
+                  )}
+                  {displayLocation && (
+                    <li>
+                      <strong>⌖</strong>
+                      <span>{displayLocation}</span>
+                    </li>
+                  )}
+                  {profile.linkedin && (
+                    <li>
+                      <strong>in</strong>
+                      <a href={profile.linkedin}>{cleanLink(profile.linkedin)}</a>
+                    </li>
+                  )}
+                  {profile.website && (
+                    <li>
+                      <strong>⌘</strong>
+                      <a href={profile.website}>{cleanLink(profile.website)}</a>
+                    </li>
+                  )}
+                </ul>
+              </section>
 
-          {/* Skills */}
-          {Object.keys(skillsByCategory).length > 0 && (
-            <section className="cv-side-section">
-              <h2 className="cv-side-title">Skills</h2>
-              {Object.entries(skillsByCategory).map(([cat, items]) => (
-                <div className="cv-skill-group" key={cat}>
-                  <h3 className="cv-skill-group-title">{cat}</h3>
-                  <div className="cv-skill-tags">
-                    {items.map((s) => (
-                      <span
-                        key={s.id}
-                        className={`cv-skill-tag ${s.level === 'Advanced' ? 'advanced' : ''}`}
-                      >
-                        {s.name}
-                      </span>
+              {Object.keys(skillsByCategory).length > 0 && (
+                <section className="cv-side-section">
+                  <h2 className="cv-side-title">{labels.skills}</h2>
+                  {Object.entries(skillsByCategory).map(([key, group]) => (
+                    <div className="cv-skill-group" key={key}>
+                      <h3 className="cv-skill-group-title">{group.label}</h3>
+                      <div className="cv-skill-tags">
+                        {group.items.map((s: any) => (
+                          <span
+                            key={s.id}
+                            className={`cv-skill-tag ${s.level === 'Advanced' ? 'advanced' : ''}`}
+                          >
+                            {localize(locale, s.name, s.nameAr)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {stats.length > 0 && (
+                <section className="cv-side-section">
+                  <h2 className="cv-side-title">{labels.atAGlance}</h2>
+                  <div className="cv-stats-grid">
+                    {stats.slice(0, 4).map((stat) => (
+                      <div className="cv-stat-box" key={stat.id}>
+                        <div className="cv-stat-value">{stat.value}</div>
+                        <div className="cv-stat-label">
+                          {localize(locale, stat.label, stat.labelAr)}
+                        </div>
+                      </div>
                     ))}
                   </div>
-                </div>
-              ))}
-            </section>
-          )}
+                </section>
+              )}
 
-          {/* Stats */}
-          {stats.length > 0 && (
-            <section className="cv-side-section">
-              <h2 className="cv-side-title">At a Glance</h2>
-              <div className="cv-stats-grid">
-                {stats.slice(0, 4).map((stat) => (
-                  <div className="cv-stat-box" key={stat.id}>
-                    <div className="cv-stat-value">{stat.value}</div>
-                    <div className="cv-stat-label">{stat.label}</div>
+              <section className="cv-side-section">
+                <h2 className="cv-side-title">{labels.languages}</h2>
+                <ul className="cv-contact-list">
+                  <li>
+                    <strong>—</strong>
+                    <span>{labels.arabicNative}</span>
+                  </li>
+                  <li>
+                    <strong>—</strong>
+                    <span>{labels.englishPro}</span>
+                  </li>
+                </ul>
+              </section>
+            </aside>
+
+            <main className="cv-main">
+              {displayBio && (
+                <section className="cv-section">
+                  <h2 className="cv-section-title">{labels.summary}</h2>
+                  <p className="cv-summary">{displayBio}</p>
+                </section>
+              )}
+
+              {experiences.length > 0 && (
+                <section className="cv-section">
+                  <h2 className="cv-section-title">{labels.experience}</h2>
+                  {experiences.map((exp) => (
+                    <div className="cv-item" key={exp.id}>
+                      <div className="cv-item-header">
+                        <h3 className="cv-item-title">
+                          {localize(locale, exp.position, exp.positionAr)}
+                        </h3>
+                        <span className="cv-item-date">
+                          {exp.startDate} — {exp.endDate || labels.present}
+                        </span>
+                      </div>
+                      <p className="cv-item-subtitle">
+                        {localize(locale, exp.company, exp.companyAr)}
+                        {exp.location ? ` · ${exp.location}` : ''}
+                      </p>
+                      <p className="cv-item-body">
+                        {localize(locale, exp.description, exp.descriptionAr)}
+                      </p>
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {educations.length > 0 && (
+                <section className="cv-section">
+                  <h2 className="cv-section-title">{labels.education}</h2>
+                  {educations.map((edu) => (
+                    <div className="cv-item" key={edu.id}>
+                      <div className="cv-item-header">
+                        <h3 className="cv-item-title">
+                          {localize(locale, edu.degree, edu.degreeAr)}
+                        </h3>
+                        <span className="cv-item-date">
+                          {edu.startDate} — {edu.endDate || labels.present}
+                        </span>
+                      </div>
+                      <p className="cv-item-subtitle">
+                        {localize(locale, edu.institution, edu.institutionAr)}
+                      </p>
+                      {localize(locale, edu.description, edu.descriptionAr) && (
+                        <p className="cv-item-body">
+                          {localize(locale, edu.description, edu.descriptionAr)}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {renderServices.length > 0 && (
+                <section className="cv-section">
+                  <h2 className="cv-section-title">{labels.services}</h2>
+                  <div className="cv-services-grid">
+                    {renderServices.map((s) => (
+                      <div className="cv-service" key={s.id}>
+                        <strong>{s.title}</strong>
+                        {s.firstFeature ? ` — ${s.firstFeature}` : ''}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </section>
-          )}
+                </section>
+              )}
 
-          {/* Languages (static) */}
-          <section className="cv-side-section">
-            <h2 className="cv-side-title">Languages</h2>
-            <ul className="cv-contact-list">
-              <li>
-                <strong>—</strong>
-                <span>Arabic (Native)</span>
-              </li>
-              <li>
-                <strong>—</strong>
-                <span>English (Professional)</span>
-              </li>
-            </ul>
-          </section>
-        </aside>
-
-        {/* ============ MAIN ============ */}
-        <main className="cv-main">
-          {/* Summary */}
-          {displayBio && (
-            <section className="cv-section">
-              <h2 className="cv-section-title">الهدف الوظيفي / Summary</h2>
-              <p className="cv-summary">{displayBio}</p>
-            </section>
-          )}
-
-          {/* Experience */}
-          {experiences.length > 0 && (
-            <section className="cv-section">
-              <h2 className="cv-section-title">الخبرة العملية</h2>
-              {experiences.map((exp) => (
-                <div className="cv-item" key={exp.id}>
-                  <div className="cv-item-header">
-                    <h3 className="cv-item-title">{exp.positionAr || exp.position}</h3>
-                    <span className="cv-item-date">
-                      {exp.startDate} — {exp.endDate || 'Present'}
-                    </span>
-                  </div>
-                  <p className="cv-item-subtitle">
-                    {exp.companyAr || exp.company}
-                    {exp.location ? ` · ${exp.location}` : ''}
-                  </p>
-                  <p className="cv-item-body">{exp.descriptionAr || exp.description}</p>
-                </div>
-              ))}
-            </section>
-          )}
-
-          {/* Education */}
-          {educations.length > 0 && (
-            <section className="cv-section">
-              <h2 className="cv-section-title">المؤهلات الدراسية</h2>
-              {educations.map((edu) => (
-                <div className="cv-item" key={edu.id}>
-                  <div className="cv-item-header">
-                    <h3 className="cv-item-title">{edu.degreeAr || edu.degree}</h3>
-                    <span className="cv-item-date">
-                      {edu.startDate} — {edu.endDate || 'Present'}
-                    </span>
-                  </div>
-                  <p className="cv-item-subtitle">{edu.institutionAr || edu.institution}</p>
-                  {(edu.descriptionAr || edu.description) && (
-                    <p className="cv-item-body">{edu.descriptionAr || edu.description}</p>
-                  )}
-                </div>
-              ))}
-            </section>
-          )}
-
-          {/* Services */}
-          {renderServices.length > 0 && (
-            <section className="cv-section">
-              <h2 className="cv-section-title">الخدمات</h2>
-              <div className="cv-services-grid">
-                {renderServices.map((s) => (
-                  <div className="cv-service" key={s.id}>
-                    <strong>{s.title}</strong>
-                    {s.firstFeature ? ` — ${s.firstFeature}` : ''}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <p className="cv-footer-note">
-            Generated dynamically · {new Date().toLocaleDateString('en-GB', {
-              day: '2-digit',
-              month: 'long',
-              year: 'numeric',
-            })}
-          </p>
-        </main>
+              <p className="cv-footer-note">
+                {labels.generated} ·{' '}
+                {new Date().toLocaleDateString(dateLocale, {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </p>
+            </main>
           </>
         )}
       </article>
