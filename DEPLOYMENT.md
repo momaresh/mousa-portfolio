@@ -77,9 +77,10 @@ git push -u origin main
 
 #### 3. Configure Build Settings (if needed)
 - **Framework Preset**: Next.js (auto-detected)
-- **Build Command**: `npx prisma generate && next build`
-- **Output Directory**: `.next` (default)
+- **Build Command**: `prisma generate && next build` (or leave default from `package.json` / `vercel.json`)
+- **Output Directory**: **leave EMPTY** — do NOT set `.next` (that causes Vercel platform 404)
 - **Install Command**: `npm install`
+- **Root Directory**: leave empty (repo root)
 
 #### 4. Add Environment Variables
 In Vercel dashboard → Settings → Environment Variables:
