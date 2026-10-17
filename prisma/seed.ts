@@ -195,16 +195,17 @@ async function main() {
     },
   })
 
+  // Exact wording from Mousa's CV / LinkedIn (Arabic source of truth)
   const experiences = [
     {
-      company: 'Al-Wakeel Al-Shamel (Games)',
-      companyAr: 'الوكيل الشامل للألعاب',
+      company: 'Al-Wakeel Al-Shamel, Jeddah',
+      companyAr: 'الوكيل الشامل، جدة',
       position: 'Branch Manager',
-      positionAr: 'مسؤول فرع',
+      positionAr: 'مسئول فرع',
       description:
-        'Branch manager in Jeddah — sales, operations management, and work on Onyx Pro.',
+        'Branch manager at Al-Wakeel Al-Shamel Games — sales, operations management, using Onyx Pro.',
       descriptionAr:
-        'مسؤول فرع في جدة — المبيعات وإدارة العمل واستخدام نظام الأونكس برو.',
+        'مسئول فرع لدى شركة الوكيل الشامل للالعاب - مبيعات ، وإدارة العمل - وباستخدام نظام الاونكس برو..',
       startDate: '2024-10',
       endDate: '2025-12',
       isCurrent: false,
@@ -213,14 +214,14 @@ async function main() {
       sortOrder: 1,
     },
     {
-      company: 'Al-Wakeel Al-Shamel (Games)',
-      companyAr: 'الوكيل الشامل للألعاب',
-      position: 'Warehouse / Installation Worker',
+      company: 'Al-Wakeel Al-Shamel, Jeddah',
+      companyAr: 'الوكيل الشامل، جدة',
+      position: 'Worker',
       positionAr: 'عامل',
       description:
-        'Loading, unloading, and installation work for the games department.',
+        'Loading, unloading, and installation worker in the games department at Al-Wakeel Al-Shamel branch.',
       descriptionAr:
-        'العمل في التحميل والتنزيل والتركيب لقسم الألعاب.',
+        'العمل لدى شركة الوكيل الشامل كعامل تحميل وتنزيل وتركيب لدى قسم الألعاب فرع الوكيل الشامل..',
       startDate: '2025-04',
       endDate: '2025-10',
       isCurrent: false,
@@ -229,14 +230,14 @@ async function main() {
       sortOrder: 2,
     },
     {
-      company: 'Al-Ajji Foodstuffs',
-      companyAr: 'العجي للمواد الغذائية',
+      company: 'Al-Ajji Foodstuffs, Ibb — Al-Radmah',
+      companyAr: 'العجي للمواد الغذائية، اب - الرضمه',
       position: 'Accountant & Sales',
       positionAr: 'محاسب ومبيعات',
       description:
-        'Accounting and sales support using Onyx Pro — Ibb / Al-Radmah.',
+        'Accountant and sales assistant at Al-Ajji Foodstuffs on Onyx Pro.',
       descriptionAr:
-        'محاسب ومبيعات باستخدام نظام الأونكس برو — إب / الرضمة.',
+        'محاسب ومساعد مبيعات لدى العجي للمواد الغذائية على نظام الاونكس برو..',
       startDate: '2024-03',
       endDate: '2024-04',
       isCurrent: false,
@@ -245,14 +246,14 @@ async function main() {
       sortOrder: 3,
     },
     {
-      company: 'Al-Khodeiri Exchange & General Trade',
-      companyAr: 'الخضيري للصرافة والتجارة العامة',
+      company: 'Al-Khodeiri, Aden — Al-Bayda',
+      companyAr: 'الخضيري، عدن - البيضاء',
       position: 'Accounts Auditor',
       positionAr: 'مراجع حسابات',
       description:
-        'Year-end accounts auditor for Al-Khodeiri construction-materials branches (Aden and Al-Bayda).',
+        'Annual year-end accounts auditor for Al-Khodeiri construction-materials branches in Aden and Al-Bayda.',
       descriptionAr:
-        'مراجع حسابات سنوي عام لفروع الخضيري لمواد البناء (فرع عدن وفرع البيضاء).',
+        'العمل ع مراجعة الحسابات سنويا كمراجع حسابات نهاية العام لدى فروع الخضيري لمواد البناء عدن ، وفروع البيضاء ..',
       startDate: '2020-01',
       endDate: '2023-01',
       isCurrent: false,
@@ -261,14 +262,14 @@ async function main() {
       sortOrder: 4,
     },
     {
-      company: 'Al-Khodeiri Exchange & General Trade',
-      companyAr: 'الخضيري للصرافة والتجارة العامة',
-      position: 'Accounts & Purchasing Accountant',
+      company: 'Al-Khodeiri, Al-Bayda',
+      companyAr: 'الخضيري، البيضاء',
+      position: 'Accountant',
       positionAr: 'محاسب',
       description:
-        'Accounts and purchasing accountant for the construction-materials department, Al-Bayda branch, using Onyx Pro.',
+        'Responsible for accounts and purchasing at Al-Khodeiri Exchange & General Trade, construction-materials department, Al-Bayda branch, using Onyx Pro.',
       descriptionAr:
-        'مسؤول على الحسابات والمشتريات لقسم مواد البناء — فرع البيضاء، باستخدام نظام الأونكس برو.',
+        'مسؤول ع الحسابات والمشتريات لدى الخضيري للصرافة والتجارة العامة قسم مواد البناء فرع البيضاء باستخدام نظام الاونكس برو ..',
       startDate: '2020-01',
       endDate: '2023-01',
       isCurrent: false,
@@ -277,14 +278,14 @@ async function main() {
       sortOrder: 5,
     },
     {
-      company: 'Al-Khodeiri Exchange & General Trade',
-      companyAr: 'الخضيري للصرافة والتجارة العامة',
+      company: 'Al-Khodeiri, Al-Bayda',
+      companyAr: 'الخضيري، البيضاء',
       position: 'Accountant',
       positionAr: 'محاسب',
       description:
-        'Accountant and administrator for the construction-materials department, Al-Bayda branch, using Mutakamil Plus.',
+        'Accountant and administrator at Al-Khodeiri Exchange & General Trade, construction-materials department, Al-Bayda branch, using Mutakamil Plus.',
       descriptionAr:
-        'العمل كمحاسب وإداري لقسم مواد البناء — فرع البيضاء، باستخدام نظام المتكامل بلس.',
+        'محاسب وإداري لدى الخضيري للصرافة والتجارة العامة قسم مواد البناء فرع البيضاء باستخدام نظام المتكامل بلاس ..',
       startDate: '2017-10',
       endDate: '2020-01',
       isCurrent: false,
@@ -293,14 +294,14 @@ async function main() {
       sortOrder: 6,
     },
     {
-      company: 'Al-Khodeiri Hypermarket',
-      companyAr: 'هايبر ماركت الخضيري',
+      company: 'Al-Khodeiri, Al-Bayda',
+      companyAr: 'الخضيري، البيضاء',
       position: 'Hypermarket Accountant',
       positionAr: 'محاسب هايبر ماركت',
       description:
-        'Establishing the accounting system and setting up work operations at Al-Khodeiri Hypermarket, Al-Bayda.',
+        'Setting up the accounting system and establishing operations at Al-Khodeiri Hypermarket — Al-Bayda.',
       descriptionAr:
-        'تأسيس النظام المحاسبي وتهيئة سير العمل في هايبر ماركت الخضيري — البيضاء.',
+        'تهيئة النظام المحاسبي وتأسيس العمل لدى هايبر ماركت الخضيري - البيضاء',
       startDate: '2017-04',
       endDate: '2017-10',
       isCurrent: false,

@@ -380,7 +380,7 @@ export default function CVDocument({
                       </div>
                       <p className="cv-item-subtitle">
                         {localize(locale, exp.company, exp.companyAr)}
-                        {exp.location ? ` · ${exp.location}` : ''}
+                        {locale === 'en' && exp.location ? ` · ${exp.location}` : ''}
                       </p>
                       <p className="cv-item-body">
                         {localize(locale, exp.description, exp.descriptionAr)}
