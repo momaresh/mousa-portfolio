@@ -1,0 +1,282 @@
+@import "tailwindcss";
+
+/*
+  Local font stacks — no Google Fonts fetch at compile time.
+  Works offline / behind restricted networks.
+*/
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-primary: var(--accent);
+  --color-primary-light: var(--accent-hover);
+  --color-primary-dark: var(--accent-hover);
+  --color-secondary: var(--accent);
+  --color-text: var(--ink);
+  --color-text-muted: var(--muted);
+  --color-dark: var(--bg);
+  --color-dark-light: var(--bg-soft);
+  --color-dark-card: var(--surface);
+  --color-dark-border: var(--line);
+  --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --font-arabic: "Segoe UI", Tahoma, "Arabic Typesetting", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
+}
+
+/* Dark — softer charcoal (less harsh than pure black) */
+html,
+html[data-theme='dark'] {
+  --bg: #16181d;
+  --bg-soft: #1c1f26;
+  --surface: #22262e;
+  --line: #343a46;
+  --ink: #eef0f4;
+  --ink-soft: #c5cad3;
+  --muted: #9aa3b2;
+  --accent: #eef0f4;
+  --accent-hover: #ffffff;
+  --accent-soft: rgba(238, 240, 244, 0.07);
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --focus: #7dd3fc;
+}
+
+/* Light — gallery white */
+html[data-theme='light'] {
+  --bg: #f7f7f5;
+  --bg-soft: #efefed;
+  --surface: #ffffff;
+  --line: #e4e4e0;
+  --ink: #111111;
+  --ink-soft: #333333;
+  --muted: #6b6b6b;
+  --accent: #111111;
+  --accent-hover: #000000;
+  --accent-soft: rgba(0, 0, 0, 0.04);
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --focus: #2563eb;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) var(--bg);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans), var(--font-arabic), system-ui, sans-serif;
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[dir='rtl'] body {
+  font-family: var(--font-arabic), var(--font-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-arabic), Georgia, serif;
+  font-feature-settings: 'ss01' on;
+}
+
+.container-site {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-site {
+    padding-inline: 2rem;
+  }
+}
+
+.nav-shell {
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+
+.section {
+  padding-block: 5rem;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-block: 7rem;
+  }
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.link-underline {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: color-mix(in srgb, var(--ink) 35%, transparent);
+  transition: text-decoration-color 0.2s ease;
+}
+
+.link-underline:hover {
+  text-decoration-color: var(--ink);
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+}
+
+.input-field {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  padding: 0.85rem 0;
+  color: var(--ink);
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.2s ease;
+}
+
+.input-field:focus {
+  border-bottom-color: var(--ink);
+}
+
+.input-field::placeholder {
+  color: var(--muted);
+}
+
+.btn-solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 0;
+  transition: opacity 0.2s ease;
+}
+
+.btn-solid:hover {
+  opacity: 0.85;
+}
+
+.btn-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--ink);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.btn-line:hover {
+  border-color: var(--ink);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* legacy aliases for admin */
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.gradient-text {
+  color: var(--ink);
+}
+
+.surface-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.btn-ghost {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.admin-shell {
+  --color-text: #e8eef5;
+  --color-text-muted: #94a3b8;
+  --color-dark: #0b1220;
+  --color-dark-light: #1e293b;
+  --color-dark-card: #111827;
+  --color-dark-border: #334155;
+  --color-primary: #60a5fa;
+  --color-primary-light: #93c5fd;
+  --color-primary-dark: #3b82f6;
+  min-height: 100vh;
+  background: #0b1220;
+  color: #e8eef5;
+}
+
+.admin-shell .glass-card {
+  background: rgba(17, 24, 39, 0.92);
+  border: 1px solid #334155;
+}
+
+.admin-shell .gradient-text {
+  color: #93c5fd;
+}

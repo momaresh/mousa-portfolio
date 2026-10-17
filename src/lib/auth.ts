@@ -1,0 +1,15 @@
+import bcrypt from 'bcryptjs'
+import { randomBytes } from 'crypto'
+
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 12)
+}
+
+export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+  return bcrypt.compare(password, hashedPassword)
+}
+
+export function generateToken(): string {
+  // Cryptographically secure random token (256 bits)
+  return randomBytes(32).toString('hex')
+}

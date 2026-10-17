@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model Profile {
+  id          String  @id @default(cuid())
+  name        String
+  nameAr      String?
+  title       String
+  titleAr     String?
+  subtitle    String?
+  subtitleAr  String?
+  bio         String
+  bioAr       String?
+  email       String
+  phone       String?
+  whatsapp    String?
+  linkedin    String?
+  github      String?
+  twitter     String?
+  instagram   String?
+  facebook    String?
+  website     String?
+  avatarUrl   String?
+  resumeUrl   String?
+  location    String?
+  locationAr  String?
+  yearsOfExp  Int     @default(3)
+  projectsCount Int  @default(0)
+  available   Boolean @default(true)
+}
+
+model Skill {
+  id         String @id @default(cuid())
+  name       String
+  nameAr     String
+  level      String
+  category   String
+  categoryAr String
+  icon       String?
+  sortOrder  Int    @default(0)
+}
+
+model Experience {
+  id          String   @id @default(cuid())
+  company     String
+  companyAr   String?
+  position    String
+  positionAr  String?
+  description String
+  descriptionAr String?
+  startDate   String
+  endDate     String?
+  isCurrent   Boolean  @default(false)
+  location    String?
+  type        String   @default("fulltime")
+  logoUrl     String?
+  websiteUrl  String?
+  sortOrder   Int      @default(0)
+}
+
+model Education {
+  id           String  @id @default(cuid())
+  degree       String
+  degreeAr     String?
+  institution  String
+  institutionAr String?
+  description  String?
+  descriptionAr String?
+  startDate    String
+  endDate      String?
+  isCurrent    Boolean @default(false)
+  location     String?
+  sortOrder    Int     @default(0)
+}
+
+model Project {
+  id           String  @id @default(cuid())
+  title        String
+  titleAr      String?
+  slug         String  @unique
+  description  String
+  descriptionAr String?
+  longDescription String?
+  imageUrl     String?
+  liveUrl      String?
+  githubUrl    String?
+  company      String?
+  companyAr    String?
+  category     String
+  featured     Boolean @default(false)
+  sortOrder    Int     @default(0)
+  technologies ProjectTechnology[]
+  highlights   ProjectHighlight[]
+}
+
+model ProjectTechnology {
+  id        String  @id @default(cuid())
+  name      String
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectHighlight {
+  id        String  @id @default(cuid())
+  text      String
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Service {
+  id            String @id @default(cuid())
+  title         String
+  titleAr       String
+  description   String
+  descriptionAr String
+  icon          String
+  features      String
+  featuresAr    String
+  sortOrder     Int    @default(0)
+}
+
+model Testimonial {
+  id        String @id @default(cuid())
+  name      String
+  position  String?
+  company   String?
+  content   String
+  avatarUrl String?
+  rating    Int    @default(5)
+  sortOrder Int    @default(0)
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Integration {
+  id            String @id @default(cuid())
+  name          String
+  nameAr        String
+  description   String
+  descriptionAr String
+  icon          String
+  category      String @default("api")
+  sortOrder     Int    @default(0)
+}
+
+model Stat {
+  id        String @id @default(cuid())
+  label     String
+  labelAr   String
+  value     String
+  color     String @default("primary")
+  sortOrder Int    @default(0)
+}

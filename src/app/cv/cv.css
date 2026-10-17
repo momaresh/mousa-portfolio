@@ -1,0 +1,680 @@
+/* ============================================
+   CV - Print-Optimized Stylesheet (A4)
+   ATS-friendly, accessible, two-column layout
+   ============================================ */
+
+:root {
+  --cv-primary: #6c5ce7;
+  --cv-primary-dark: #4834d4;
+  --cv-text: #1a1a2e;
+  --cv-text-muted: #5a5a7a;
+  --cv-border: #e2e2ec;
+  --cv-bg: #ffffff;
+  --cv-sidebar-bg: #f5f4fb;
+  --cv-tag-bg: #efedfa;
+}
+
+.cv-shell {
+  background: #e9e9f0;
+  min-height: 100vh;
+  padding: 24px 12px 64px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+  color: var(--cv-text);
+}
+
+.cv-toolbar {
+  max-width: 210mm;
+  margin: 0 auto 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cv-toolbar-title {
+  font-size: 14px;
+  color: #555;
+}
+
+.cv-toolbar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.cv-btn-primary {
+  background: var(--cv-primary);
+  color: #fff;
+}
+
+.cv-btn-primary:hover {
+  background: var(--cv-primary-dark);
+}
+
+.cv-btn-ghost {
+  background: #fff;
+  color: var(--cv-text);
+  border-color: var(--cv-border);
+}
+
+.cv-btn-ghost:hover {
+  background: #f7f7fb;
+}
+
+/* ====== Document (A4) ====== */
+.cv-document {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  background: var(--cv-bg);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  display: grid;
+  grid-template-columns: 70mm 1fr;
+  font-size: 10pt;
+  line-height: 1.45;
+  color: var(--cv-text);
+}
+
+/* ====== Sidebar ====== */
+.cv-sidebar {
+  background: var(--cv-sidebar-bg);
+  padding: 14mm 8mm;
+  color: var(--cv-text);
+}
+
+.cv-avatar {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, var(--cv-primary), #a29bfe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 48pt;
+  font-weight: 700;
+}
+
+.cv-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cv-name {
+  font-size: 16pt;
+  font-weight: 700;
+  margin: 0 0 4px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.cv-job {
+  font-size: 10pt;
+  color: var(--cv-primary);
+  text-align: center;
+  margin: 0 0 16px;
+  font-weight: 500;
+}
+
+.cv-side-section {
+  margin-bottom: 16px;
+}
+
+.cv-side-title {
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--cv-primary-dark);
+  border-bottom: 2px solid var(--cv-primary);
+  padding-bottom: 4px;
+  margin: 0 0 10px;
+}
+
+.cv-contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 9pt;
+}
+
+.cv-contact-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.cv-contact-list li strong {
+  color: var(--cv-text-muted);
+  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 14px;
+}
+
+.cv-contact-list a {
+  color: var(--cv-text);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.cv-contact-list a:hover {
+  color: var(--cv-primary);
+  text-decoration: underline;
+}
+
+.cv-skill-group {
+  margin-bottom: 10px;
+}
+
+.cv-skill-group-title {
+  font-size: 9pt;
+  font-weight: 600;
+  color: var(--cv-text);
+  margin: 0 0 4px;
+}
+
+.cv-skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.cv-skill-tag {
+  display: inline-block;
+  background: var(--cv-tag-bg);
+  color: var(--cv-primary-dark);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 8.5pt;
+  font-weight: 500;
+}
+
+.cv-skill-tag.advanced {
+  background: var(--cv-primary);
+  color: #fff;
+}
+
+.cv-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cv-stat-box {
+  text-align: center;
+  background: #fff;
+  padding: 8px 4px;
+  border-radius: 6px;
+  border: 1px solid var(--cv-border);
+}
+
+.cv-stat-value {
+  font-size: 13pt;
+  font-weight: 700;
+  color: var(--cv-primary);
+  line-height: 1;
+}
+
+.cv-stat-label {
+  font-size: 7.5pt;
+  color: var(--cv-text-muted);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ====== Main column ====== */
+.cv-main {
+  padding: 14mm 12mm;
+}
+
+.cv-section {
+  margin-bottom: 14px;
+  /* Allow long sections to break across pages naturally */
+  break-inside: auto;
+  page-break-inside: auto;
+}
+
+.cv-section-title {
+  font-size: 12pt;
+  font-weight: 700;
+  color: var(--cv-primary-dark);
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--cv-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  /* Don't leave a section title orphaned at page end */
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.cv-summary {
+  font-size: 9.5pt;
+  color: var(--cv-text);
+  line-height: 1.55;
+  margin: 0;
+  text-align: justify;
+}
+
+.cv-item {
+  margin-bottom: 12px;
+  /* Keep individual experience/project entries together */
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.cv-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 2px;
+  flex-wrap: wrap;
+}
+
+.cv-item-title {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: var(--cv-text);
+  margin: 0;
+}
+
+.cv-item-date {
+  font-size: 8.5pt;
+  color: var(--cv-text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cv-item-subtitle {
+  font-size: 9.5pt;
+  color: var(--cv-primary);
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.cv-item-body {
+  font-size: 9pt;
+  color: var(--cv-text);
+  margin: 0;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+.cv-tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.cv-tech-pill {
+  display: inline-block;
+  font-size: 8pt;
+  padding: 1px 6px;
+  background: var(--cv-tag-bg);
+  color: var(--cv-primary-dark);
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.cv-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+}
+
+.cv-highlights li {
+  font-size: 8.8pt;
+  color: var(--cv-text);
+  padding-left: 12px;
+  position: relative;
+  margin-bottom: 2px;
+  line-height: 1.45;
+}
+
+.cv-highlights li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--cv-primary);
+  font-weight: bold;
+}
+
+.cv-services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+}
+
+.cv-service {
+  font-size: 8.8pt;
+  padding-left: 10px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.cv-service::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--cv-primary);
+  font-weight: bold;
+}
+
+.cv-service strong {
+  color: var(--cv-text);
+}
+
+.cv-footer-note {
+  margin-top: 14px;
+  font-size: 7.5pt;
+  color: var(--cv-text-muted);
+  text-align: center;
+  font-style: italic;
+}
+
+/* ====== Print rules ====== */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+/* Force browsers to keep background colors when printing */
+* {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  color-adjust: exact !important;
+}
+
+@media print {
+  html, body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .cv-shell {
+    background: #fff;
+    padding: 0;
+    margin: 0;
+  }
+  .cv-toolbar {
+    display: none !important;
+  }
+  .cv-document {
+    box-shadow: none;
+    margin: 0;
+    width: 210mm;
+    min-height: 0;
+    /* Critical for multi-page grid: align content to start
+       so the sidebar doesn't stretch to fill empty space */
+    align-items: start;
+  }
+  /* Tighter spacing in print to fit more on first page */
+  .cv-main {
+    padding: 12mm 12mm !important;
+  }
+  .cv-sidebar {
+    background: var(--cv-sidebar-bg) !important;
+    padding: 12mm 8mm !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .cv-section {
+    margin-bottom: 10px !important;
+  }
+  .cv-item {
+    margin-bottom: 8px !important;
+  }
+  /* Force backgrounds & colors */
+  .cv-skill-tag.advanced,
+  .cv-stat-value,
+  .cv-section-title,
+  .cv-side-title,
+  .cv-item-subtitle,
+  .cv-job,
+  .cv-tech-pill,
+  .cv-skill-tag,
+  .cv-avatar,
+  .cv-mode-pill,
+  .cv-stat-box {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* Keep links readable but no link decoration */
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+  /* Allow long sections to break across pages naturally */
+  .cv-section {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+  /* Keep individual items (one job, one project) together */
+  .cv-item {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  /* Don't leave a section title orphaned at the bottom of a page */
+  .cv-section-title,
+  .cv-side-title {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+}
+
+/* ====== Responsive (preview only) ====== */
+@media screen and (max-width: 768px) {
+  .cv-shell {
+    padding: 12px 0 32px;
+  }
+  .cv-document {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+  .cv-sidebar {
+    padding: 24px 20px;
+  }
+  .cv-main {
+    padding: 24px 20px;
+  }
+}
+
+
+/* ============================================
+   ATS MODE — Plain, single-column, B&W
+   Designed for resume parsers (Workday, Taleo,
+   Greenhouse, iCIMS, Lever, etc.)
+   ============================================ */
+.ats-mode .cv-document {
+  grid-template-columns: 1fr;
+  width: 210mm;
+  min-height: 297mm;
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: 11pt;
+  color: #000;
+  background: #fff;
+}
+
+.ats-mode .cv-sidebar {
+  display: none;
+}
+
+.ats-mode .cv-main {
+  padding: 18mm 18mm;
+}
+
+.ats-mode .cv-section {
+  margin-bottom: 16px;
+}
+
+.ats-mode .cv-section-title {
+  color: #000;
+  border-bottom: 1.5px solid #000;
+  font-size: 12pt;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding-bottom: 2px;
+  margin-bottom: 8px;
+}
+
+.ats-mode .cv-summary,
+.ats-mode .cv-item-body,
+.ats-mode .cv-highlights li,
+.ats-mode .cv-service {
+  color: #000;
+  font-size: 10.5pt;
+}
+
+.ats-mode .cv-item-title {
+  color: #000;
+  font-size: 11pt;
+}
+
+.ats-mode .cv-item-subtitle {
+  color: #000;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.ats-mode .cv-item-date {
+  color: #000;
+  font-size: 10pt;
+}
+
+/* ATS header block */
+.ats-mode .cv-ats-header {
+  text-align: center;
+  margin-bottom: 18px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+}
+
+.ats-mode .cv-ats-name {
+  font-size: 20pt;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: #000;
+  letter-spacing: 1px;
+}
+
+.ats-mode .cv-ats-title {
+  font-size: 12pt;
+  margin: 0 0 6px;
+  color: #000;
+  font-weight: normal;
+}
+
+.ats-mode .cv-ats-contact {
+  font-size: 10pt;
+  color: #000;
+  line-height: 1.5;
+}
+
+.ats-mode .cv-ats-contact a {
+  color: #000;
+  text-decoration: none;
+}
+
+.ats-mode .cv-ats-contact span + span::before {
+  content: " | ";
+  color: #000;
+}
+
+/* Plain skills (comma-separated) */
+.ats-mode .cv-ats-skills-block {
+  font-size: 10.5pt;
+  line-height: 1.6;
+}
+
+.ats-mode .cv-ats-skills-block strong {
+  font-weight: 700;
+}
+
+/* Plain bullets */
+.ats-mode .cv-highlights li {
+  padding-left: 14px;
+}
+
+.ats-mode .cv-highlights li::before {
+  content: "•";
+  color: #000;
+}
+
+.ats-mode .cv-service {
+  padding-left: 14px;
+}
+
+.ats-mode .cv-service::before {
+  content: "•";
+  color: #000;
+}
+
+.ats-mode .cv-services-grid {
+  display: block;
+}
+
+.ats-mode .cv-tech-list {
+  display: block;
+  margin-top: 4px;
+}
+
+.ats-mode .cv-tech-pill {
+  background: none;
+  color: #000;
+  padding: 0;
+  font-style: italic;
+  font-size: 10pt;
+}
+
+.ats-mode .cv-tech-pill::after {
+  content: ", ";
+}
+
+.ats-mode .cv-tech-pill:last-child::after {
+  content: "";
+}
+
+.ats-mode .cv-tech-list::before {
+  content: "Technologies: ";
+  font-weight: 700;
+  font-size: 10pt;
+}
+
+.ats-mode .cv-footer-note {
+  display: none;
+}
+
+.cv-mode-pill {
+  display: inline-block;
+  background: #6c5ce7;
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
